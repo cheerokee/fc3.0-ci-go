@@ -10,6 +10,6 @@ jobs:
       - uses: actions/setup-go@v2 # Botar o go para funcionar
         with: # parametros que passamos para a action acima
           go-version: 1.18.1
-      - run: go mod init
+      - run: go mod init .
       - run: go test # executar um comando
       - run: go run math.go 
