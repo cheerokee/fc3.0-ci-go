@@ -6,13 +6,17 @@ on:
 jobs:
   check-application:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: ['1.17','1.18']
     steps:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v2 # pega os dados que acabamos de subir e vai baixar na maquina ubuntu
       # https://github.com/actions/setup-go
       - uses: actions/setup-go@v2 # Botar o go para funcionar
         with: # parametros que passamos para a action acima
-          go-version: 1.18.1
+          go-version: ${{ matrix.go }}
       - run: go mod init 'pwd' 
       - run: go test # executar um comando
       - run: go run math.go 
+    
