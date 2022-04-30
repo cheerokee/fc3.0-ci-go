@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-go@v2 # Botar o go para funcionar
         with: # parametros que passamos para a action acima
           go-version: ${{ matrix.go }}
-      - run: go mod init 'pwd' 
+#      - run: go mod init 'pwd'
       - run: go test # executar um comando
       - run: go run math.go 
     
