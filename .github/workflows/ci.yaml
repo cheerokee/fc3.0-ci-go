@@ -27,11 +27,17 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1 # https://github.com/docker/setup-buildx-action
 
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with: # As informações de autenticação podemos obte-la no github
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and push
         id: docker_build # Com esse ID nós conseguimos pegar o resultado dessa action e utilizar em outra step
         uses: docker/build-push-action@v2 # https://github.com/docker/build-push-action - Vai buildar nosso Dockerfile e depois vai subir a imagem para o Docker Hub
         with:
-          push: false # Vai fazer o push para o Docker Hub? Se sim, precisa da action https://github.com/docker/login-action
+          push: true # Vai fazer o push para o Docker Hub? Se sim, precisa da action https://github.com/docker/login-action
           tags: cheerokee/fc3.0-ci-go:latest # A imagem no Dockerhub
 #          build-args: |
 #            arg1=value1
