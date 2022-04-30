@@ -6,17 +6,33 @@ on:
 jobs:
   check-application:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go: ['1.17','1.18']
+#    strategy:
+#      matrix:
+#        go: ['1.17','1.18']
     steps:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v2 # pega os dados que acabamos de subir e vai baixar na maquina ubuntu
       # https://github.com/actions/setup-go
       - uses: actions/setup-go@v2 # Botar o go para funcionar
         with: # parametros que passamos para a action acima
-          go-version: ${{ matrix.go }}
+#          go-version: ${{ matrix.go }}
+          go-version: 1.18
 #      - run: go mod init 'pwd'
       - run: go test # executar um comando
-      - run: go run math.go 
-    
+      - run: go run math.go
+
+      - name: Set up QEMU # Colocando um nome nesse passo que está sendo executado
+        uses: docker/setup-qemu-action@v1 # https://github.com/docker/setup-qemu-action
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1 # https://github.com/docker/setup-buildx-action
+
+      - name: Build and push
+        id: docker_build # Com esse ID nós conseguimos pegar o resultado dessa action e utilizar em outra step
+        uses: docker/build-push-action@v2 # https://github.com/docker/build-push-action - Vai buildar nosso Dockerfile e depois vai subir a imagem para o Docker Hub
+        with:
+          push: false # Vai fazer o push para o Docker Hub? Se sim, precisa da action https://github.com/docker/login-action
+          tags: cheerokee/fc3.0-ci-go:latest # A imagem no Dockerhub
+#          build-args: |
+#            arg1=value1
+#            arg2=value2
